@@ -1,0 +1,147 @@
+site_name: Disruptive Architectures
+site_author: Arnaldo Viana 
+
+
+extra:  
+    materia: Disruptive Architectures - IA e IoT
+    professor: Arnaldo Viana
+    ano: 2025
+
+theme:
+  feature:
+    tabs: true
+  name: active-handout
+  #custom_dir: overrides
+
+docs_dir: material
+site_dir: docs
+
+repo_url: https://github.com/arnaldojr/DisruptiveArchitectures/
+repo_name: "Disruptive Architectures"
+site_url: https://arnaldojr.github.io/DisruptiveArchitectures/
+
+
+# Extensions / plugins
+
+extra_javascript:
+  - https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.0.0/js-yaml.min.js
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+  - https://cdn.jsdelivr.net/gh/insper-education/active-handout-plugins-js@main/package/plugin-bundle.js
+
+extra:
+  ihandout_config:
+#    counter:
+#      - question
+#      - tip
+#      - exercise
+#      - example
+    report:
+      api-base: https://devlife.insper-comp.com.br/api/offerings/1/
+      url: https://devlife.insper-comp.com.br/api/offerings/1/exercises/
+
+# Extensions / plugins
+plugins:
+  - git-revision-date-localized
+  - search
+  - mkdocs-jupyter:
+      use_directory_urls: false
+      include_source: True
+      execute: False
+
+extra_css:
+#  - css/termynal.css
+  - https://cdn.jsdelivr.net/gh/insper-education/active-handout-css@main/devlife.css
+
+
+markdown_extensions:
+  - markdown.extensions.tables
+  - tables
+  - markdown.extensions.admonition
+  - markdown.extensions.codehilite:
+      guess_lang: false
+  - markdown.extensions.def_list
+  - markdown.extensions.footnotes
+  - markdown.extensions.meta
+  - markdown.extensions.toc:
+      permalink: true
+  - pymdownx.arithmatex
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.critic
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_generator: !!python/name:pymdownx.emoji.to_svg
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.magiclink:
+      repo_url_shorthand: true
+      user: squidfunk
+      repo: mkdocs-material
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.superfences
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+  - pymdownx.snippets:
+      base_path: code
+      check_paths: true
+
+
+nav:
+  - Home: index.md
+  - Agenda: agenda/agenda.md
+  - CheckPoint:
+    - Orientações gerais: aulas/checkpoint/index.md
+    # - CP4 - Arduino: aulas/checkpoint/cp4-arduino.md
+    # - CheckPoint 5 - Liberado: aulas/checkpoint/cp.md
+    # - CheckPoint 6: aulas/checkpoint/cp6.md
+  
+
+  - Introdução: 
+    - IoT: aulas/iot/intro/index.md
+    - Arduino: 
+        - Introdução: aulas/iot/intro/introarduino.md
+        - Exemplos: 
+          - Dicas: aulas/iot/intro/dicas.md
+          - From 0 to Hero!: aulas/iot/ex0/index.md 
+          - Blink led: aulas/iot/ex2/index.md
+          - Led botão: aulas/iot/ex3/index.md
+          - Botão pot led: aulas/iot/ex4/index.md
+          - PWM: aulas/iot/ex8/index.md
+          - Função millis: aulas/iot/ex5/index.md
+          - Interrupção de pino: aulas/iot/ex6/index.md
+          - Comunicação Serial: aulas/iot/ex1/index.md
+          - Comunicação com Python: aulas/iot/ex7/index.md 
+    - IA: aulas/IA/intro/index.md
+    
+  - Laboratórios:
+    - IoT:
+      - Arduino:
+        - Solução From Zero to Hero!: aulas/iot/ex0/solucao.md 
+        - Lab01 - Led: aulas/iot/lab1/index.md
+        - Lab02 - Botão: aulas/iot/lab2/index.md
+        - Lab03 - Serial : aulas/iot/lab3/index.md
+        - Lab04 - EEPROM : aulas/iot/lab4/index.md
+      - Node-Red:
+        - Lab05 : aulas/iot/lab5/index.md
+        - Lab06 : aulas/iot/lab6/index.md
+        - Lab07 : aulas/iot/lab7/index.md
+      # - Lab08 : aulas/iot/lab8/index.md
+      # - Lab09 : aulas/iot/lab9/index.md
+    - IA:
+      - Lab01 - Dataframe: aulas/IA/lab01/dataframe.ipynb 
+      - Lab02 - Aprendizado Supervisionado - Classificação: aulas/IA/lab02/classificador-knn.ipynb
+      - Lab03 - Aprendizado Supervisionado - Regressão: aulas/IA/lab03/regressao.ipynb
+      - Lab04 - Dicas de pre processamento: aulas/IA/lab04/dicasDePreprocessamento.ipynb    
+      - Lab05 - Validação cruzada: aulas/IA/lab05/validacaocruzada.ipynb
+      - Lab06 - Redes Neurais - Percepton : aulas/IA/lab06/rna.ipynb
+      - Lab07 - Redes Neurais - MLP: aulas/IA/lab07/mlp.ipynb
+      - Lab07 - Redes Neurais - TensorFlow: aulas/IA/lab07/index.md
+      - BATALHA DAS REDES: aulas/IA/batalharedes/batalha_das_redes.ipynb
+      - Lab08 - Redes Neurais - CNN: aulas/IA/lab08/cnn.ipynb
+      - Lab9 - Redes Neurais - Transfer learning: aulas/IA/lab09/transferlearning.ipynb
+      - Lab10 - Algumas dicas: aulas/IA/lab10/dicas.ipynb
+
