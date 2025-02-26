@@ -36,7 +36,7 @@ void piscaGR(){
   digitalWrite(ledR, HIGH);
   digitalWrite(ledG, LOW);
   delay(250);
-  digitalWrite(ledG, LOW);
+  digitalWrite(ledR, LOW);
 }
 
 void piscaY(){
