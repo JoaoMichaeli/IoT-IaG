@@ -10,6 +10,9 @@
 #define ledY 6
 
 void setup() {
+  // Habilitar porta serial
+  // Baud Rate (9600 bits/s) padrão UNO
+  Serial.begin(9600);
   // Configurar o sentido dos pinos de I/O
   pinMode(BT1, INPUT);
   pinMode(BT2, INPUT);
