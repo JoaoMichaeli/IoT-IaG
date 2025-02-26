@@ -25,7 +25,12 @@ void setup() {
 
 void loop() {
   if(digitalRead(BT1) == HIGH){
+    Serial.println("BT1 Ligado!!!");
     piscaGR();
+  }
+  else if(digitalRead(BT2) == HIGH){
+    Serial.println("BT2 Ligado!!!");
+    piscaAll();
   }
   else{
     piscaY();
@@ -47,4 +52,13 @@ void piscaY(){
   delay(350);
   digitalWrite(ledY, LOW);
   delay(350);
+}
+
+void piscaAll(){
+  digitalWrite(ledG, HIGH);
+  digitalWrite(ledR, HIGH);
+  digitalWrite(ledY, HIGH);
+
+  digitalWrite(ledG, LOW);
+  digitalWrite(ledR, LOW);
 }
