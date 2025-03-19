@@ -71,7 +71,7 @@ void fase02(){
   delay(2000);
 
   digitalWrite(LedYellowV, LOW);
-  digitalWrite(LedRedP, LOW);  
+  digitalWrite(LedRedP, LOW);
 }
 
 void fase03(){
