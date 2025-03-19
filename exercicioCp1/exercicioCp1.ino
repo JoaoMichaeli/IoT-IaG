@@ -7,9 +7,6 @@ Converte o valor de tensão dos pinos de A0 a A5 em um valor
 decimal de 0 a 1023, por meio da função analogRead()
 */
 
-// Variável que armazenará o valor convertido pelo ADC
-int valor;
-
 /*
 Questão 01 (0.50 ponto) – Configuração de dispositivos
 • Analise o diagrama proposto e utilize a diretiva #define para atribuir nomes aos pinos de I/O dos botões e dos 
@@ -41,23 +38,15 @@ void setup() {
   pinMode(LedGreenV , OUTPUT);
   pinMode(LedRedP , OUTPUT);
   pinMode(LedGreenP, OUTPUT);
+
+  Serial.println("RM555678");
 }
 
 void loop() {
-  Serial.println("RM555678");
+  
 
-  fasesJuntas();
-}
-
-// Utilizando potenciometro
-void exemploPotenciometro(){
-  valor = analogRead(A2); // Ligação do potenciometro
-
-  if(valor > 950) digitalWrite(LedGreenP, HIGH);
-  else digitalWrite(LedGreenP, LOW);
-    
-  Serial.println(valor);
-  delay(1000);
+  //fasesJuntas();
+  Q3();
 }
 
 /*
@@ -131,7 +120,43 @@ Leia o valor da entrada analógica e armazene em uma variável "int". Se o valor
 • O sistema só voltará a funcionar quando o botão RESET for pressionado ou o sistema for reiniciado.
 • O monitor Serial deve apresentar o valor da variável monitorada.
 */
+int valor;
+void Q3(){
+  valor = analogRead(A2);
+  Serial.println(valor);
 
+  if(valor < 300){
+    digitalWrite(LedYellowV, LOW);
+    digitalWrite(LedRedP, LOW);
+    digitalWrite(LedGreenP, HIGH);
+  }else if(valor >= 300 & valor < 600){
+    digitalWrite(LedGreenP, LOW);
+    digitalWrite(LedYellowV, HIGH);
+  }else if(valor >= 600 & valor < 900){
+    digitalWrite(LedYellowV, LOW);
+    digitalWrite(LedRedP, HIGH);
+  }else if(valor >= 900 & valor < 1000){
+    for (int i = 0; i < 10; i++){
+      digitalWrite(LedRedP, LOW);
+      digitalWrite(LedRedV, HIGH);
+      digitalWrite(LedYellowV, HIGH);
+      digitalWrite(LedGreenV, HIGH);
+
+      delay(200);
+
+      digitalWrite(LedRedV, LOW);
+      digitalWrite(LedYellowV, LOW);
+      digitalWrite(LedGreenV, LOW);
+
+      delay(200);
+    }
+  }else if(valor > 1000){
+    digitalWrite(LedRedV, HIGH);
+    digitalWrite(LedRedP, HIGH);
+
+    Serial.println("ALARME!");
+  }
+}
 
 
 
@@ -177,3 +202,33 @@ começam a piscar. Os verdes apagam.
 • Quando o Arduino detectar que o estado do botão 3 passou de ligado para desligado, os LEDs vermelhos 
 apagam. Ciclo reinicia.
 */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+  EXEMPLO EM SALA DO PROFESSOR SOBRE POTENCIOMENTRO
+*/
+void exemploPotenciometro(){
+  valor = analogRead(A2); // Ligação do potenciometro
+
+  if(valor > 950) digitalWrite(LedGreenP, HIGH);
+  else digitalWrite(LedGreenP, LOW);
+    
+  Serial.println(valor);
+  delay(1000);
+}
