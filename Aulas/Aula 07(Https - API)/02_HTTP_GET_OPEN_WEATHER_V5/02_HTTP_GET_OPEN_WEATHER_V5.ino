@@ -9,11 +9,11 @@
 #include <Arduino_JSON.h>
 
 // Credenciais da rede WiFi
-const char* ssid = "SUA REDE WIFI";
-const char* password = "SUA SENHA WIFI";
+const char* ssid = "Joao";
+const char* password = "fiaparduino";
 
 // Chave da API Open Weather
-String apiKey = "SUA CHAVE DA API";
+String apiKey = "c2c7f59deeb40ea874635da4dc48aaa8";
 
 // Dados do timer
 unsigned long lastTime = 0;
@@ -36,7 +36,7 @@ void setup() {
   WiFi.begin(ssid, password);
   Serial.println("Conectando...");
   while(WiFi.status() != WL_CONNECTED) {
-    delay(500);
+    delay(2000);
     Serial.print(".");
   }
   // Confirma a conexão:
@@ -65,12 +65,13 @@ void loop() {
         return;
       }     
 
-      // Retorna a string JSON obtida e
-      // os valores de temperatura, pressão, umidade e velocidade do vento:
+      // Retorna a string JSON obtida
       Serial.println("========================================================================");
       Serial.print("JSON object = ");
       Serial.println(myObject);
       Serial.println("========================================================================");
+
+      // Os valores de temperatura, pressão, umidade e velocidade do vento:
 
       // Temperatura:
       Serial.print("Temperatura: ");
