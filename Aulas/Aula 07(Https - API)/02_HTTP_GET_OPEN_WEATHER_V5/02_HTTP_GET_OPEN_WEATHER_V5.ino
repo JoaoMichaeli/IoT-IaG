@@ -9,11 +9,11 @@
 #include <Arduino_JSON.h>
 
 // Credenciais da rede WiFi
-const char* ssid = "Joao";
-const char* password = "fiaparduino";
+const char* ssid = "";
+const char* password = "";
 
 // Chave da API Open Weather
-String apiKey = "c2c7f59deeb40ea874635da4dc48aaa8";
+String apiKey = "";
 
 // Dados do timer
 unsigned long lastTime = 0;
