@@ -2,6 +2,22 @@
 
 #include <Arduino.h>
 
+// Identificadores
+const char* ID        = "INSIRA O ID DO SEU GRUPO";
+const char* moduleID  = "INSIRA O ID DO SEU ESP32";
+
+// Wi-Fi
+const char* SSID      = "Wokwi-GUEST";
+const char* PASSWORD  = "";
+
+// MQTT Broker
+const char* BROKER_MQTT  = "INSIRA O ENDEREÇO DO SEU BROKER";
+const int   BROKER_PORT  = 1883;
+const char* mqttUser     = "joao";
+const char* mqttPassword = "joao1234";
+
+// Tópico MQTT
+#define TOPICO_PUBLISH  "INSIRA O NOME DO SEU TÓPICO"
 
 
 // Configurações de Hardware
@@ -22,7 +38,7 @@ void loop() {
   delay(400);
   digitalWrite(PIN_LED, LOW);
   delay(400);
-  Serial.println("piscando..questao nova 3.");
+  Serial.println("piscando..questao nova 4.");
 }
 
 
