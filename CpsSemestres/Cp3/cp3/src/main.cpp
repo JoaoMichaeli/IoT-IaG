@@ -1,125 +1,147 @@
-#include <Arduino.h>
 #include <WiFi.h>
 
+//----------------------------------------------------------
+// Bibliotecas a instalar pelo Gerenciador de Bibliotecas
+
+#include <PubSubClient.h>
+#include <ArduinoJson.h>
+
+//----------------------------------------------------------
+// Definições e configurações
+
+#define boardLED 2 // LED onboard
+
 // Identificadores
-const char* ID = "Joao";
-const char* moduleID = "Cp3 - Esp32";
+const char* ID        = "Joao - Saes";
+const char* moduleID  = "Cp3 - Esp32";
 
 // Wi-Fi
-const char* SSID = "Wokwi-GUEST";
-const char* PASSWORD = "";
+const char* SSID      = "Wokwi-GUEST";
+const char* PASSWORD  = "";
 
 // MQTT Broker
-const char* BROKER_MQTT = "191.232.34.158";
-const int BROKER_PORT = 1883;
-const char* MQTT_USER = "joao";
-const char* MQTT_PASS = "joao1234";
-const char* TOPIC = "Cp3/Mqtt";
+const char* BROKER_MQTT  = "172.208.54.189";
+const int   BROKER_PORT  = 1880;
+const char* mqttUser     = "gs2025";
+const char* mqttPassword = "q1w2e3r4";
 
-// Configurações de Hardware
-#define PIN_LED 15
+// Tópico MQTT
+#define TOPICO_PUBLISH  "Cp3/Mqtt"
 
-// Estrutura para dados dos sensores
-struct SensorData {
-  float temperature;
-  float humidity;
-  float pressure;
-  float altitude;
-};
-
-SensorData lastSentData = {NAN, NAN, NAN, NAN};
-unsigned long lastSendTime = 0;
-const long sendInterval = 5000;
+//----------------------------------------------------------
+// Variáveis globais
 
 WiFiClient espClient;
+PubSubClient MQTT(espClient);
+char buffer[256]; // Buffer para o JSON serializado
 
-void setup_wifi() {
-  delay(10);
-  Serial.println();
-  Serial.print("Conectando a rede: ");
-  Serial.println(SSID);
+//----------------------------------------------------------
+// Conexão Wi-Fi
 
-  WiFi.begin(SSID, PASSWORD);
-
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
-  }
-
-  Serial.println("");
-  Serial.println("WiFi conectado");
-  Serial.println("Endereço IP: ");
-  Serial.println(WiFi.localIP());
+void initWiFi() {
+    WiFi.begin(SSID, PASSWORD);
+    Serial.print("Conectando ao Wi-Fi");
+    while (WiFi.status() != WL_CONNECTED) {
+        delay(1000);
+        Serial.print(".");
+    }
+    Serial.println("\nWi-Fi conectado!");
+    Serial.print("IP: ");
+    Serial.println(WiFi.localIP());
+    Serial.print("MAC Address: ");
+    Serial.println(WiFi.macAddress());
 }
 
-String createJson(const SensorData& data) {
-  String json = "{";
-  json += "\"temperature\":" + String(data.temperature, 1) + ",";
-  json += "\"humidity\":" + String(data.humidity, 1) + ",";
-  json += "\"pressure\":" + String(data.pressure) + ",";
-  json += "\"altitude\":" + String(data.altitude) + ",";
-  json += "\"id\":\"" + String(ID) + "\",";
-  json += "\"module\":\"" + String(moduleID) + "\"";
-  json += "}";
-  return json;
+void reconectaWiFi() {
+    if (WiFi.status() != WL_CONNECTED) {
+        Serial.println("Reconectando Wi-Fi...");
+        initWiFi();
+    }
 }
 
-bool connectToBroker() {
-  if (!espClient.connect(BROKER_MQTT, BROKER_PORT)) {
-    Serial.println("Falha na conexão com o broker");
-    return false;
-  }
-  return true;
+//----------------------------------------------------------
+// Conexão MQTT
+
+void initMQTT() {
+    MQTT.setServer(BROKER_MQTT, BROKER_PORT);
+    while (!MQTT.connected()) {
+        Serial.println("Conectando ao Broker MQTT...");
+        if (MQTT.connect(moduleID, mqttUser, mqttPassword)) {
+            Serial.println("Conectado ao Broker!");
+        } else {
+            Serial.print("Falha na conexão. Estado: ");
+            Serial.println(MQTT.state());
+            delay(2000);
+        }
+    }
 }
 
-void publishData(const SensorData& data) {
-  String json = createJson(data);
-  String mqttMsg = String("PUBLISH ") + TOPIC + "\n" + json;
-  espClient.print(mqttMsg);
-  Serial.println("Dados enviados: " + json);
+void verificaConexoesWiFiEMQTT() {
+    reconectaWiFi();
+    if (!MQTT.connected()) {
+        initMQTT();
+    }
+    MQTT.loop();
 }
 
-SensorData generateSensorData() {
-  SensorData data;
-  data.temperature = random(200, 351) / 10.0;
-  data.humidity = random(400, 801) / 10.0;
-  data.pressure = random(980, 1051);
-  data.altitude = random(0, 501);
-  return data;
+//----------------------------------------------------------
+// Envio e feedback
+
+void enviaEstadoOutputMQTT() {
+    MQTT.publish(TOPICO_PUBLISH, buffer);
+    Serial.println("Mensagem publicada com sucesso!");
 }
 
-bool shouldSendData(const SensorData& newData) {
-  if (isnan(lastSentData.temperature)) return true;
-  if (abs(newData.temperature - lastSentData.temperature) >= 0.5) return true;
-  if (abs(newData.humidity - lastSentData.humidity) >= 1.0) return true;
-  if (abs(newData.pressure - lastSentData.pressure) >= 2) return true;
-  if (abs(newData.altitude - lastSentData.altitude) >= 5) return true;
-  if (millis() - lastSendTime > sendInterval) return true;
-  return false;
+void piscaLed() {
+    digitalWrite(boardLED, HIGH);
+    delay(300);
+    digitalWrite(boardLED, LOW);
 }
+
+//----------------------------------------------------------
+// Setup inicial
 
 void setup() {
-  Serial.begin(115200);
-  pinMode(PIN_LED, OUTPUT);
-  digitalWrite(PIN_LED, LOW);
-  
-  setup_wifi();
-  randomSeed(millis()); // Corrigido: usando millis() em vez de analogRead
+    Serial.begin(115200);
+    pinMode(boardLED, OUTPUT);
+    digitalWrite(boardLED, LOW);
+    initWiFi();    
+    initMQTT();
 }
 
+//----------------------------------------------------------
+// Loop principal
+
 void loop() {
-  digitalWrite(PIN_LED, !digitalRead(PIN_LED));
-  
-  SensorData newData = generateSensorData();
-  
-  if (shouldSendData(newData)) {
-    if (connectToBroker()) {
-      publishData(newData);
-      lastSentData = newData;
-      lastSendTime = millis();
-      espClient.stop();
-    }
-  }
-  
-  delay(1000);
+    // Verifica e mantém conexões ativas com Wi-Fi e MQTT
+    verificaConexoesWiFiEMQTT();
+
+    // Montagem do documento JSON
+    StaticJsonDocument<300> doc;
+
+    // 1. Identificação
+    doc["ID"]     = ID;
+    doc["Sensor"] = moduleID;
+
+    // 2. Rede
+    doc["IP"]     = WiFi.localIP();
+
+    // 3. Dados de sensores
+    // INSIRA AQUI OS DADOS DOS SEUS SENSORES
+    // doc["Temperatura"] = temperatura;    
+
+    // Serializa JSON para string
+    serializeJson(doc, buffer);
+
+    // Exibe no monitor serial
+    Serial.println(buffer);
+
+    // Envia via MQTT
+    enviaEstadoOutputMQTT();
+
+    // Feedback visual
+    piscaLed();
+
+    // Intervalo de envio
+    delay(10000);
 }
